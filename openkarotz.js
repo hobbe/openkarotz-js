@@ -35,13 +35,11 @@ var OpenKarotz = function (karotz_ip) {
 		throw new Error("variable karotz_ip is required!");
 	}
 
-	/**
-	 * IP of OpenKarotz
-	 */
+	/** OpenKarotz IP*/
 	this.ip = karotz_ip;
 
-	// Global variables
-	var currentStatus = new Array();
+	/** OpenKarotz state: memory, led color, version, etc. */
+	this.state = { "sleep": 1, "version": "unknown", "karotz_free_space": "unknown" };
 
 	// API URLs
 	var karotz_api = "http://" + karotz_ip + "/cgi-bin";
@@ -61,24 +59,26 @@ var OpenKarotz = function (karotz_ip) {
 
 
 	/**
-	 * Status API: get OpenKarotz status, stored in currentStatus variable.
+	 * Status API: get OpenKarotz status, stored in state variable.
 	 *
 	 * @param onSuccess if defined, called on successful API execution
 	 * @param onFailure if defined, called on failed API execution
 	 */
 	this.status = function (onSuccess, onFailure) {
 		console.log('status: ' + apiStatus);
+		var carrot = this;
 		$.get(apiStatus, function(data) {
 			console.log("status: " + data);
 			// /!\ no "return" in status api response
 			if (data) {
 				var result = JSON.parse(data);
-				currentStatus = result;
+				carrot.state = result;
+				console.log(carrot.state);
 				if (onSuccess) {
 					onSuccess();
 				}
 			} else {
-				currentStatus.sleep = 1;
+				carrot.state.sleep = 1;
 				if (onFailure) {
 					onFailure();
 				}
@@ -94,11 +94,12 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.sleep = function (onSuccess, onFailure) {
+		var carrot = this;
 		$.get(apiSleep, function(data) {
 			console.log("sleep: " + data);
 			var result = JSON.parse(data);
 			if (result.return == 0) {
-				currentStatus.sleep = 1;
+				carrot.state.sleep = 1;
 				if (onSuccess) {
 					onSuccess();
 				}
@@ -118,11 +119,12 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.wakeup = function (onSuccess, onFailure) {
+		var carrot = this;
 		$.get(apiWakeup + "?silent=1", function(data) {
 			console.log("wakeup: " + data);
 			var result = JSON.parse(data);
 			if (result.return == 0) {
-				currentStatus.sleep = 0;
+				carrot.state.sleep = 0;
 				if (onSuccess) {
 					onSuccess();
 				}
@@ -215,7 +217,7 @@ var OpenKarotz = function (karotz_ip) {
 	 */
 	this.soundControl = function (cmd, onSuccess, onFailure) {
 		$.get(apiSoundControl + "?cmd=" + cmd, function(data) {
-			console.log("sound_control(" + cmd + ": " + data);
+			console.log("sound_control(" + cmd + "): " + data);
 			var result = JSON.parse(data);
 			if (result.return == 0) {
 				if (onSuccess) {
@@ -237,7 +239,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.soundControlPause = function (onSuccess, onFailure) {
-		soundControl("pause", onSuccess, onFailure);
+		this.soundControl("pause", onSuccess, onFailure);
 	};
 
 	/**
@@ -248,7 +250,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.soundControlQuit = function (onSuccess, onFailure) {
-		soundControl("quit", onSuccess, onFailure);
+		this.soundControl("quit", onSuccess, onFailure);
 	};
 
 	/**
@@ -289,7 +291,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.ledsPulse = function (color, onSuccess, onFailure) {
-		leds(color, 1, onSuccess, onFailure);
+		this.leds(color, 1, onSuccess, onFailure);
 	};
 
 	/**
@@ -301,7 +303,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *            error_message
 	 */
 	this.ledsFixed = function (color, onSuccess, onFailure) {
-		leds(color, 0, onSuccess, onFailure);
+		this.leds(color, 0, onSuccess, onFailure);
 	};
 
 	/**
