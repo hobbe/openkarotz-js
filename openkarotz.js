@@ -1,4 +1,4 @@
-/*
+/*!
  * OpenKarotz.js - openkarotz-js
  * Copyright (c) 2013 Olivier Bagot (http://github.com/hobbe/openkarotz-js)
  *
