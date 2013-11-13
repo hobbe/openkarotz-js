@@ -20,8 +20,8 @@ $(document).ready(function() {
     var K = new OpenKarotz("192.168.10.22");
     console.log("Karotz IP: " + K.ip);
     K.sleep(
-        function() {
-            console.log("Success");
+        function(result) {
+            console.log("Success: " + result);
             $("#answer").html("OK");
         },
         function(msg) {

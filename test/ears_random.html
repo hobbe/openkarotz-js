@@ -20,9 +20,10 @@ $(document).ready(function() {
     var K = new OpenKarotz("192.168.10.22");
     console.log("Karotz IP: " + K.ip);
     K.earsRandom(
-        function(left, right) {
-            console.log("Success: left=" + left + ", right=" + right);
-            $("#answer").html("OK: left=" + left + ", right=" + right);
+        function(result) {
+            console.log("Success: " + result);
+            console.log("left=" + result.left + ", right=" + result.right);
+            $("#answer").html("OK: left=" + result.left + ", right=" + result.right);
         },
         function(msg) {
             console.error("Error: " + msg);
