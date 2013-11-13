@@ -56,8 +56,12 @@ var OpenKarotz = function (karotz_ip) {
 			"version": "unknown",
 			"karotz_free_space": "unknown" };
 
-	// API URLs
-	var karotz_api = "http://" + karotz_ip + "/cgi-bin";
+	//
+	// OpenKarotz URLs.
+	// These should not change: HTTP on port 80, http://ip:80/cgi-bin
+	//
+	var karotz_url = "http://" + karotz_ip;
+	var karotz_api = karotz_url + "/cgi-bin";
 
 	var apiStatus = karotz_api + '/status';
 	var apiSleep = karotz_api + '/sleep';
@@ -72,7 +76,34 @@ var OpenKarotz = function (karotz_ip) {
 	var apiMoods = karotz_api + '/moods';
 	var apiTts = karotz_api + '/tts';
 	var apiSnapshot = karotz_api + '/snapshot';
+	var apiSnapshotGet = karotz_api + '/snapshot_get';
 
+	/**
+	 * Get OpenKarotz IP or hostname.
+	 *
+	 * @return the Karotz IP or hostname
+	 */
+	this.getIp = function () {
+		return this.ip;
+	};
+
+	/**
+	 * Get OpenKarotz web server URL: http://karotz
+	 *
+	 * @return the Karotz web server URL
+	 */
+	this.getUrl = function () {
+		return karotz_url;
+	};
+
+	/**
+	 * Get OpenKarotz web server API URL: http://karotz/cgi-bin
+	 *
+	 * @return the Karotz web server API URL
+	 */
+	this.getApiUrl = function () {
+		return karotz_api;
+	};
 
 	/**
 	 * Status API: get OpenKarotz status, stored in state variable.
@@ -515,6 +546,19 @@ var OpenKarotz = function (karotz_ip) {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Get the snapshot url from a given snapshot name.
+	 * This uses the correct form for the snapshot_get API, which returns the
+	 * JPEG image.
+	 *
+	 * @param filename the snapshot name, as given by filename of snapshot API.
+	 */
+	this.getSnapshotUrl = function (filename) {
+		var url = apiSnapshotGet + '?filename=' + filename;
+		console.log("getSnapshotUrl: " + url);
+		return url;
 	}
 
 
