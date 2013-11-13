@@ -36,22 +36,25 @@ var OpenKarotz = function (karotz_ip) {
 		throw new Error("variable karotz_ip is required!");
 	}
 
+	this.WHITE = "FFFFFF";
+	this.BLACK = "000000";
+	this.RED = "FF0000";
+	this.GREEN = "00FF00";
+	this.BLUE = "0000FF";
+	this.VIOLET = "660099";
+	this.CYAN = "00FFFF";
+	this.YELLOW = "FFFF00";
+	this.PINK = "FF00CB";
+	this.ORANGE = "FF9900";
+
 	/** OpenKarotz IP */
 	this.ip = karotz_ip;
 
-	this.colorWhite = "FFFFFF";
-	this.colorBlack = "000000";
-	this.colorRed = "FF0000";
-	this.colorGreen = "00FF00";
-	this.colorBlue = "0000FF";
-	this.colorViolet = "660099";
-	this.colorCyan = "00FFFF";
-	this.colorYellow = "FFFF00";
-	this.colorPink = "FF00CB";
-	this.colorOrange = "FF9900";
-
-	/** OpenKarotz state: memory, led color, version, etc. */
-	this.state = { "sleep": 1, "version": "unknown", "karotz_free_space": "unknown" };
+	/** OpenKarotz state: sleep status, version, memory, led color, etc. */
+	this.state = {
+			"sleep": 1,
+			"version": "unknown",
+			"karotz_free_space": "unknown" };
 
 	// API URLs
 	var karotz_api = "http://" + karotz_ip + "/cgi-bin";
@@ -75,7 +78,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Status API: get OpenKarotz status, stored in state variable.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -84,7 +87,7 @@ var OpenKarotz = function (karotz_ip) {
 		var carrot = this;
 		$.get(apiStatus, function(data) {
 			console.log("status: " + data);
-			// /!\ no "return" in status api response
+			// /!\ no "return" in status API response
 			if (data) {
 				var result = JSON.parse(data);
 				carrot.state = result;
@@ -105,7 +108,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Sleep API: put Karotz to sleep.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -131,7 +134,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Wake up API: wake up Karotz.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -157,7 +160,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Reboot API: reboot Karotz.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -182,7 +185,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param url URL of sound to play (mp3, m3u)
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -207,7 +210,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param id internal sound ID
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -232,7 +235,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param cmd command to execute: pause, quit
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -256,7 +259,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Sound control API: utility method for pause.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 * @see #soundControl
@@ -284,7 +287,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param color led color
 	 * @param pulse if 1, led will pulse ; if 0, led will be fixed
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -313,7 +316,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param color led color
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -326,7 +329,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param color led color
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -340,7 +343,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param left position of left ear
 	 * @param right position of right ear
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -364,7 +367,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Ears reset API: reset position of Karotz ears.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -388,7 +391,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * Ears random API: random position of Karotz ears.
 	 *
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object, in particular left and right,
+	 *            parameter: API resulting object, in particular left and right,
 	 *            the positions randomly selected
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
@@ -415,7 +418,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param id if defined, the ID of the mood to trigger ; if undefined, a
 	 *            random mood will be used
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -446,7 +449,7 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param voice the voice to use
 	 * @param nocache if set to 1, the phrase will not be cached
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */
@@ -485,7 +488,7 @@ var OpenKarotz = function (karotz_ip) {
 	 *
 	 * @param silent silent mode: 0 = inactive, 1 = active
 	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
+	 *            parameter: API resulting object
 	 * @param onFailure if defined, called on failed API execution with
 	 *            parameter: error message
 	 */

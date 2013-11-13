@@ -19,7 +19,7 @@ console.log("Leds Test");
 $(document).ready(function() {
     var K = new OpenKarotz("192.168.10.22");
     console.log("Karotz IP: " + K.ip);
-    K.leds(K.colorBlue, 1,
+    K.leds(K.BLUE, 1,
         function(result) {
             console.log("Success: " + result);
             $("#answer").html("BLUE PULSE");
