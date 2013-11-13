@@ -73,10 +73,11 @@ var OpenKarotz = function (karotz_ip) {
 	var apiEars = karotz_api + '/ears';
 	var apiEarsReset = karotz_api + '/ears_reset';
 	var apiEarsRandom = karotz_api + '/ears_random';
-	var apiMoods = karotz_api + '/moods';
 	var apiTts = karotz_api + '/tts';
 	var apiSnapshot = karotz_api + '/snapshot';
 	var apiSnapshotGet = karotz_api + '/snapshot_get';
+
+	var apiMoods = karotz_api + '/apps/moods';
 
 	/**
 	 * Get OpenKarotz IP or hostname.
