@@ -24,10 +24,24 @@
  *
  */
 
+'use strict';
+
+/**
+ * @module openkarotz-js
+ * @overview JavaScript library to control {@link http://openkarotz.filippi.org/ OpenKarotz}.
+ * This library enables integration with an OpenKarotz device through its APIs.
+ * @version 0.2.1+
+ * @copyright 2013, Olivier Bagot ({@link http://github.com/hobbe})
+ * @license {@link http://github.com/hobbe/openkarotz-js/raw/master/LICENSE MIT License}
+ * @author Olivier Bagot ({@link http://github.com/hobbe/openkarotz-js})
+ */
+
 /**
  * Create a new OpenKarotz instance.
- *
- * @param karotz_ip the IP address of your OpenKarotz device
+ * @class OpenKarotz
+ * @param {string} karotz_ip - the IP address of the OpenKarotz device
+ * @return {Object} the OpenKarotz controller
+ * @throws {Error} An error is thrown if the IP address is undefined
  */
 var OpenKarotz = function (karotz_ip) {
 
@@ -36,25 +50,76 @@ var OpenKarotz = function (karotz_ip) {
 		throw new Error("variable karotz_ip is required!");
 	}
 
+	/**
+	 * Constant for white color.
+	 * @constant {string} OpenKarotz#WHITE
+	 */
 	this.WHITE = "FFFFFF";
+
+	/**
+	 * Constant for black color.
+	 * @constant {string} OpenKarotz#BLACK
+	 */
 	this.BLACK = "000000";
+
+	/**
+	 * Constant for red color.
+	 * @constant {string} OpenKarotz#RED
+	 */
 	this.RED = "FF0000";
+
+	/**
+	 * Constant for green color.
+	 * @constant {string} OpenKarotz#GREEN
+	 */
 	this.GREEN = "00FF00";
+
+	/**
+	 * Constant for blue color.
+	 * @constant {string} OpenKarotz#BLUE
+	 */
 	this.BLUE = "0000FF";
+
+	/**
+	 * Constant for violet color.
+	 * @constant {string} OpenKarotz#VIOLET
+	 */
 	this.VIOLET = "660099";
+
+	/**
+	 * Constant for cyan color.
+	 * @constant {string} OpenKarotz#CYAN
+	 */
 	this.CYAN = "00FFFF";
+
+	/**
+	 * Constant for yellow color.
+	 * @constant {string} OpenKarotz#YELLOW
+	 */
 	this.YELLOW = "FFFF00";
+
+	/**
+	 * Constant for pink color.
+	 * @constant {string} OpenKarotz#PINK
+	 */
 	this.PINK = "FF00CB";
+
+	/**
+	 * Constant for orange color.
+	 * @constant {string} OpenKarotz#ORANGE
+	 */
 	this.ORANGE = "FF9900";
 
-	/** OpenKarotz IP */
+
+	/* OpenKarotz IP. */
 	this.ip = karotz_ip;
 
-	/** OpenKarotz state: sleep status, version, memory, led color, etc. */
+	/* OpenKarotz state: sleep status, version, memory, led color, etc. */
 	this.state = {
-			"sleep": 1,
-			"version": "unknown",
-			"karotz_free_space": "unknown" };
+		"sleep": 1,
+		"version": "unknown",
+		"karotz_free_space": "unknown"
+	};
 
 	//
 	// OpenKarotz URLs.
@@ -81,8 +146,8 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Get OpenKarotz IP or hostname.
-	 *
-	 * @return the Karotz IP or hostname
+	 * @function OpenKarotz#getIp
+	 * @return {string} the Karotz IP or hostname
 	 */
 	this.getIp = function () {
 		return this.ip;
@@ -90,7 +155,7 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Get OpenKarotz web server URL: http://karotz
-	 *
+	 * @function OpenKarotz#getUrl
 	 * @return the Karotz web server URL
 	 */
 	this.getUrl = function () {
@@ -99,7 +164,7 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Get OpenKarotz web server API URL: http://karotz/cgi-bin
-	 *
+	 * @function OpenKarotz#getApiUrl
 	 * @return the Karotz web server API URL
 	 */
 	this.getApiUrl = function () {
@@ -107,12 +172,19 @@ var OpenKarotz = function (karotz_ip) {
 	};
 
 	/**
+	 * Get OpenKarotz state: sleep status, version, memory, led color, etc.
+	 * @function OpenKarotz#getState
+	 * @return {Object} the Karotz state
+	 */
+	this.getState = function () {
+		return this.state;
+	};
+
+	/**
 	 * Status API: get OpenKarotz status, stored in state variable.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#status
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.status = function (onSuccess, onFailure) {
 		console.log('status: ' + apiStatus);
@@ -138,11 +210,9 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sleep API: put Karotz to sleep.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#sleep
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.sleep = function (onSuccess, onFailure) {
 		var carrot = this;
@@ -164,11 +234,9 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Wake up API: wake up Karotz.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#wakeup
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.wakeup = function (onSuccess, onFailure) {
 		var carrot = this;
@@ -190,11 +258,9 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Reboot API: reboot Karotz.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#reboot
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.reboot = function (onSuccess, onFailure) {
 		$.get(apiReboot, function(data) {
@@ -214,12 +280,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sound API: play sound from URL.
-	 *
-	 * @param url URL of sound to play (mp3, m3u)
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#sound
+	 * @param {string} url - URL of sound to play (mp3, m3u)
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.sound = function (url, onSuccess, onFailure) {
 		$.get(apiSound + "?url=" + url, function(data) {
@@ -239,12 +303,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sound API for internal sound: play internal sound with given ID.
-	 *
-	 * @param id internal sound ID
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#soundInternal
+	 * @param {integer} id - internal sound ID
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.soundInternal = function (id, onSuccess, onFailure) {
 		$.get(apiSound + "?id=" + id, function(data) {
@@ -264,12 +326,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sound control API: pause or stop playing current sound.
-	 *
-	 * @param cmd command to execute: pause, quit
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#soundControl
+	 * @param {string} cmd - command to execute: pause, quit
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.soundControl = function (cmd, onSuccess, onFailure) {
 		$.get(apiSoundControl + "?cmd=" + cmd, function(data) {
@@ -289,12 +349,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sound control API: utility method for pause.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
-	 * @see #soundControl
+	 * @function OpenKarotz#soundControlPause
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @see OpenKarotz#soundControl
 	 */
 	this.soundControlPause = function (onSuccess, onFailure) {
 		this.soundControl("pause", onSuccess, onFailure);
@@ -302,12 +360,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Sound control API: utility method for quit.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: api resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
-	 * @see #soundControl
+	 * @function OpenKarotz#soundControlQuit
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @see OpenKarotz#soundControl
 	 */
 	this.soundControlQuit = function (onSuccess, onFailure) {
 		this.soundControl("quit", onSuccess, onFailure);
@@ -315,18 +371,16 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Leds API: change led color, optional pulse.
-	 *
-	 * @param color led color
-	 * @param pulse if 1, led will pulse ; if 0, led will be fixed
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#leds
+	 * @param {string} color - led color in RGB HEX format: "FF0000" for red
+	 * @param {boolean} [pulse] - if true, led will pulse ; else led will be fixed
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.leds = function (color, pulse, onSuccess, onFailure) {
 		var pulseOption = "?";
-		if (pulse) {
-		pulseOption += "pulse=" + pulse + "&";
+		if (pulse && pulse == true) {
+			pulseOption += "pulse=1&";
 		}
 		$.get(apiLeds + pulseOption + "color=" + color, function(data) {
 			console.log("leds: " + data);
@@ -345,39 +399,35 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Leds API: utility method for pulse led.
-	 *
-	 * @param color led color
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#ledsPulse
+	 * @param {string} color - led color in RGB HEX format: "FF0000" for red
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @see OpenKarotz#leds
 	 */
 	this.ledsPulse = function (color, onSuccess, onFailure) {
-		this.leds(color, 1, onSuccess, onFailure);
+		this.leds(color, true, onSuccess, onFailure);
 	};
 
 	/**
-	 * Leds API: utility method for pulse.
-	 *
-	 * @param color led color
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * Leds API: utility method for fixed led.
+	 * @function OpenKarotz#ledsFixed
+	 * @param {string} color - led color in RGB HEX format: "FF0000" for red
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @see OpenKarotz#leds
 	 */
 	this.ledsFixed = function (color, onSuccess, onFailure) {
-		this.leds(color, 0, onSuccess, onFailure);
+		this.leds(color, false, onSuccess, onFailure);
 	};
 
 	/**
 	 * Ears API: change position of Karotz ears.
-	 *
-	 * @param left position of left ear
-	 * @param right position of right ear
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#ears
+	 * @param {number} left - position of left ear
+	 * @param {number} right - position of right ear
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.ears = function (left, right, onSuccess, onFailure) {
 		$.get(apiEars + "?left=" + left + "&right=" + right, function(data) {
@@ -397,11 +447,9 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Ears reset API: reset position of Karotz ears.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#earsReset
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.earsReset = function (onSuccess, onFailure) {
 		$.get(apiEarsReset, function(data) {
@@ -421,12 +469,9 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Ears random API: random position of Karotz ears.
-	 *
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object, in particular left and right,
-	 *            the positions randomly selected
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#earsRandom
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.earsRandom = function (onSuccess, onFailure) {
 		$.get(apiEarsRandom, function(data) {
@@ -446,13 +491,10 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Moods API: trigger an optional mood.
-	 *
-	 * @param id if defined, the ID of the mood to trigger ; if undefined, a
-	 *            random mood will be used
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#moods
+	 * @param {number} [id] - if defined, the ID of the mood to trigger ; if undefined, a random mood will be used
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.moods = function (id, onSuccess, onFailure) {
 		var idOption = "";
@@ -476,14 +518,13 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * TTS API: speak up!
-	 *
-	 * @param text the text to speak
-	 * @param voice the voice to use
-	 * @param nocache if set to 1, the phrase will not be cached
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#tts
+	 * @param {string}
+	 *                text - the text to speak
+	 * @param {string} [voice=margaux] - the voice to use
+	 * @param {number} [nocache=1] - if set to 1, the phrase will not be cached
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.tts = function (text, voice, nocache, onSuccess, onFailure) {
 		var textOption = '?text="Bonjour"';
@@ -517,12 +558,11 @@ var OpenKarotz = function (karotz_ip) {
 
 	/**
 	 * Snapshot API: take a picture
-	 *
-	 * @param silent silent mode: 0 = inactive, 1 = active
-	 * @param onSuccess if defined, called on successful API execution with
-	 *            parameter: API resulting object
-	 * @param onFailure if defined, called on failed API execution with
-	 *            parameter: error message
+	 * @function OpenKarotz#snapshot
+	 * @param {number} [silent=0] - silent mode: 0 = inactive, 1 = active
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.2.1+
 	 */
 	this.snapshot = function (silent, onSuccess, onFailure) {
 		var silentOption = '?silent=0';
@@ -550,11 +590,12 @@ var OpenKarotz = function (karotz_ip) {
 	}
 
 	/**
-	 * Get the snapshot url from a given snapshot name.
-	 * This uses the correct form for the snapshot_get API, which returns the
-	 * JPEG image.
-	 *
-	 * @param filename the snapshot name, as given by filename of snapshot API.
+	 * Get the snapshot url from a given snapshot name. This uses the
+	 * correct form for the snapshot_get API, which returns the JPEG image.
+	 * @function OpenKarotz#getSnapshotUrl
+	 * @param {string} filename - the snapshot name, as given by filename or thumb of the snapshot API.
+	 * @return {string} the snapshot URL
+	 * @since 0.2.1+
 	 */
 	this.getSnapshotUrl = function (filename) {
 		var url = apiSnapshotGet + '?filename=' + filename;
