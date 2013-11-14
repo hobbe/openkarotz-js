@@ -519,25 +519,25 @@ var OpenKarotz = function (karotz_ip) {
 	/**
 	 * TTS API: speak up!
 	 * @function OpenKarotz#tts
-	 * @param {string}
-	 *                text - the text to speak
+	 * @param {string} text - the text to speak
 	 * @param {string} [voice=margaux] - the voice to use
-	 * @param {number} [nocache=1] - if set to 1, the phrase will not be cached
+	 * @param {boolean} [nocache=false] - if set to true, the phrase will not be cached
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.tts = function (text, voice, nocache, onSuccess, onFailure) {
 		var textOption = '?text="Bonjour"';
 		if (text) {
-			textOption = '?text="' + encodeURIComponent(text) + '"';
+			// Hack: remove quotes
+			textOption = '?text="' + encodeURIComponent(text.replace(new RegExp("'","g"), "")) + '"';
 		}
 		var voiceOption = "&voice=margaux";
 		if (voice) {
-			voiceOption = "&voice=" + voice;
+			voiceOption = "&voice=" + encodeURIComponent(voice);
 		}
-		var nocacheOption = "&nocache=1";
-		if (nocache) {
-			nocacheOption = "&nocache=" + nocache;
+		var nocacheOption = "&nocache=0";
+		if (nocache && nocache == true) {
+			nocacheOption = "&nocache=1";
 		}
 		var cmd = apiTts + textOption + voiceOption + nocacheOption;
 		console.log("tts: " + cmd);
@@ -559,17 +559,15 @@ var OpenKarotz = function (karotz_ip) {
 	/**
 	 * Snapshot API: take a picture
 	 * @function OpenKarotz#snapshot
-	 * @param {number} [silent=0] - silent mode: 0 = inactive, 1 = active
+	 * @param {boolean} [silent=false] - silent mode
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 * @since 0.2.1+
 	 */
 	this.snapshot = function (silent, onSuccess, onFailure) {
 		var silentOption = '?silent=0';
-		if (silent) {
-			if (silent == 1) {
-				silentOption = '?silent=1';
-			}
+		if (silent && silent == true) {
+			silentOption = '?silent=1';
 		}
 		var cmd = apiSnapshot + silentOption;
 		console.log("silent: " + cmd);
