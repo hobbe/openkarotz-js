@@ -1,6 +1,6 @@
 {
   "name": "openkarotz-js",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "JavaScript library for OpenKarotz API",
   "homepage": "http://github.com/hobbe/openkarotz-js",
   "author": "Olivier Bagot (http://github.com/hobbe)",
@@ -8,7 +8,7 @@
     "openkarotz"
   ],
   "contributors": [
-    "Olivier Bagot (https://github.com/hobbe)"
+    "Olivier Bagot (http://github.com/hobbe)"
   ],
   "bugs": {
     "url": "http://github.com/hobbe/openkarotz-js/issues"

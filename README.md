@@ -4,7 +4,7 @@
 
 JavaScript library for OpenKarotz API.
 
-Current version is 0.2.1.
+Current version is 0.3.0.
 
 This library depends on [jQuery](http://jquery.com/).
 
@@ -15,19 +15,19 @@ OpenKarotz can be found [here](http://openkarotz.filippi.org/).
 Include external libraries
 ```
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="openkarotz-0.2.1.min.js"></script>
+<script src="openkarotz-0.3.0.min.js"></script>
 ```
 
 Example call to status, leds and ears API
 ```
 var K = new OpenKarotz("192.168.1.10");
-console.log("OpenKarotz IP: " + K.ip);
+console.log("OpenKarotz IP: " + K.getIp());
 
 K.status(
-  function() { console.log("Status success"); },
-  function() { console.error("Status error"); });
+  function(result) { console.log("Status success"); },
+  function(errorMessage) { console.error("Status error"); });
 
-console.log("OpenKarotz version: " + K.state.version);
+console.log("OpenKarotz version: " + K.getState().version);
 
 K.ledPulse("FF00FF", function() { K.ears(5, 5); });
 ```
@@ -39,6 +39,7 @@ K.ledPulse("FF00FF", function() { K.ears(5, 5); });
 - moods
 - reboot
 - sleep
+- snapshot
 - sound
 - sound_control
 - status
