@@ -30,7 +30,7 @@
  * @module openkarotz-js
  * @overview JavaScript library to control {@link http://openkarotz.filippi.org/ OpenKarotz}.
  * This library enables integration with an OpenKarotz device through its APIs.
- * @version 0.3.0
+ * @version 0.3.0+
  * @copyright 2013, Olivier Bagot ({@link http://github.com/hobbe})
  * @license {@link http://github.com/hobbe/openkarotz-js/raw/master/LICENSE MIT License}
  * @author Olivier Bagot ({@link http://github.com/hobbe/openkarotz-js})
@@ -141,6 +141,7 @@ var OpenKarotz = function (karotz_ip) {
 	var apiTts = karotz_api + '/tts';
 	var apiSnapshot = karotz_api + '/snapshot';
 	var apiSnapshotGet = karotz_api + '/snapshot_get';
+	var apiSnapshotList = karotz_api + '/snapshot_list';
 
 	var apiMoods = karotz_api + '/apps/moods';
 
@@ -570,9 +571,9 @@ var OpenKarotz = function (karotz_ip) {
 			silentOption = '?silent=1';
 		}
 		var cmd = apiSnapshot + silentOption;
-		console.log("silent: " + cmd);
+		console.log("snapshot: " + cmd);
 		$.get(cmd, function(data) {
-			console.log("silent: " + data);
+			console.log("snapshot: " + data);
 			var result = JSON.parse(data);
 			if (result.return == 0) {
 				if (onSuccess) {
@@ -599,6 +600,47 @@ var OpenKarotz = function (karotz_ip) {
 		var url = apiSnapshotGet + '?filename=' + filename;
 		console.log("getSnapshotUrl: " + url);
 		return url;
+	}
+
+	/**
+	 * Get the snapshot thumbnail url from a given snapshot name. This uses the
+	 * correct form for the snapshot_get API, which returns the GIF image.
+	 * @function OpenKarotz#getSnapshotThumbnailUrl
+	 * @param {string} filename - the snapshot name, as given by filename or thumb of the snapshot API.
+	 * @return {string} the snapshot thumbnail URL
+	 * @since 0.3.0+
+	 */
+	this.getSnapshotThumbnailUrl = function (filename) {
+		var tn = filename.replace('.jpg', '.thumb.gif');
+		var url = apiSnapshotGet + '?filename=' + tn;
+		console.log("getSnapshotThumbnailUrl: " + url);
+		return url;
+	}
+
+	/**
+	 * Snapshot list API: list existing snapshots
+	 * @function OpenKarotz#snapshotList
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.snapshotList = function (onSuccess, onFailure) {
+		var cmd = apiSnapshotList;
+		console.log("snapshot_list: " + cmd);
+		$.get(cmd, function(data) {
+			console.log("snapshot_list: " + data);
+			var result = JSON.parse(data);
+			if (result.return == 0) {
+				if (onSuccess) {
+					// Return resulting object
+					onSuccess(result);
+				}
+			} else {
+				if (onFailure) {
+					onFailure(result.msg);
+				}
+			}
+		});
 	}
 
 
