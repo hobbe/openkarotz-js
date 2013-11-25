@@ -142,6 +142,8 @@ var OpenKarotz = function (karotz_ip) {
 	var apiSnapshot = karotz_api + '/snapshot';
 	var apiSnapshotGet = karotz_api + '/snapshot_get';
 	var apiSnapshotList = karotz_api + '/snapshot_list';
+	var apiClearSnapshots = karotz_api + '/clear_snapshots';
+	var apiClearCache = karotz_api + '/clear_cache';
 
 	var apiMoods = karotz_api + '/apps/moods';
 
@@ -629,6 +631,58 @@ var OpenKarotz = function (karotz_ip) {
 		console.log("snapshot_list: " + cmd);
 		$.get(cmd, function(data) {
 			console.log("snapshot_list: " + data);
+			var result = JSON.parse(data);
+			if (result.return == 0) {
+				if (onSuccess) {
+					// Return resulting object
+					onSuccess(result);
+				}
+			} else {
+				if (onFailure) {
+					onFailure(result.msg);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Clear snapshots API: clear existing snapshots
+	 * @function OpenKarotz#clearSnapshots
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.clearSnapshots = function (onSuccess, onFailure) {
+		var cmd = apiClearSnapshots;
+		console.log("clear_snapshots: " + cmd);
+		$.get(cmd, function(data) {
+			console.log("clear_snapshots: " + data);
+			var result = JSON.parse(data);
+			if (result.return == 0) {
+				if (onSuccess) {
+					// Return resulting object
+					onSuccess(result);
+				}
+			} else {
+				if (onFailure) {
+					onFailure(result.msg);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Clear cache API: clear TTS cache
+	 * @function OpenKarotz#clearCache
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.clearCache = function (onSuccess, onFailure) {
+		var cmd = apiClearCache;
+		console.log("clear_cache: " + cmd);
+		$.get(cmd, function(data) {
+			console.log("clear_cache: " + data);
 			var result = JSON.parse(data);
 			if (result.return == 0) {
 				if (onSuccess) {
