@@ -150,6 +150,7 @@ var OpenKarotz = function (karotz_ip) {
 	var apiRfidDelete = karotz_api + '/rfid_delete';
 	var apiRfidStartRecord = karotz_api + '/rfid_start_record';
 	var apiRfidStopRecord = karotz_api + '/rfid_stop_record';
+	var apiMoodsList = karotz_api + '/moods_list';
 
 	var apiMoods = karotz_api + '/apps/moods';
 
@@ -612,6 +613,18 @@ var OpenKarotz = function (karotz_ip) {
 	 */
 	this.rfidStopRecord = function (onSuccess, onFailure) {
 		var api = apiRfidStopRecord;
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * Moods List API: list existing moods
+	 * @function OpenKarotz#moodsList
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.moodsList = function (onSuccess, onFailure) {
+		var api = apiMoodsList;
 		callapi(api, onSuccess, onFailure);
 	};
 
