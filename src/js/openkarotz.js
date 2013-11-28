@@ -184,17 +184,41 @@ var OpenKarotz = function (karotz_ip) {
 	};
 
 	/**
+	 * API call.
+	 * @param api - The API command: url + query string
+	 * @param {requestCallback} onSuccess - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} onFailure - if defined, called on failed API execution with parameter: error message
+	 */
+	function callapi(api, onSuccess, onFailure) {
+		console.log('Calling: ' + api);
+		$.get(api, function(data) {
+			console.log(api + ' result: ' + data);
+			var result = JSON.parse(data);
+			if (result["return"] == 0) {
+				if (onSuccess) {
+					onSuccess(result);
+				}
+			} else {
+				if (onFailure) {
+					onFailure(result.msg);
+				}
+			}
+		});
+	}
+
+	/**
 	 * Status API: get OpenKarotz status, stored in state variable.
 	 * @function OpenKarotz#status
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.status = function (onSuccess, onFailure) {
-		console.log('status: ' + apiStatus);
+		// Special handling of status API because no "return" in response
+		var api = apiStatus;
 		var carrot = this;
-		$.get(apiStatus, function(data) {
-			console.log("status: " + data);
-			// /!\ no "return" in status API response
+		console.log('Calling: ' + api);
+		$.get(api, function(data) {
+			console.log(api + ' result: ' + data);
 			if (data) {
 				var result = JSON.parse(data);
 				carrot.state = result;
@@ -219,20 +243,11 @@ var OpenKarotz = function (karotz_ip) {
 	 */
 	this.sleep = function (onSuccess, onFailure) {
 		var carrot = this;
-		$.get(apiSleep, function(data) {
-			console.log("sleep: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				carrot.state.sleep = 1;
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSleep;
+		callapi(api, function() {
+			carrot.state.sleep = 1;
+			onSuccess();
+		}, onFailure);
 	};
 
 	/**
@@ -243,20 +258,11 @@ var OpenKarotz = function (karotz_ip) {
 	 */
 	this.wakeup = function (onSuccess, onFailure) {
 		var carrot = this;
-		$.get(apiWakeup + "?silent=1", function(data) {
-			console.log("wakeup: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				carrot.state.sleep = 0;
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiWakeup;
+		callapi(api, function() {
+			carrot.state.sleep = 0;
+			onSuccess();
+		}, onFailure);
 	};
 
 	/**
@@ -266,19 +272,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.reboot = function (onSuccess, onFailure) {
-		$.get(apiReboot, function(data) {
-			console.log("reboot: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiReboot;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -289,19 +284,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.sound = function (url, onSuccess, onFailure) {
-		$.get(apiSound + "?url=" + url, function(data) {
-			console.log("sound: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSound + "?url=" + url;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -312,19 +296,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.soundInternal = function (id, onSuccess, onFailure) {
-		$.get(apiSound + "?id=" + id, function(data) {
-			console.log("sound id " + id + ": " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSound + "?id=" + id;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -335,19 +308,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.soundControl = function (cmd, onSuccess, onFailure) {
-		$.get(apiSoundControl + "?cmd=" + cmd, function(data) {
-			console.log("sound_control(" + cmd + "): " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSoundControl + "?cmd=" + cmd;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -385,19 +347,8 @@ var OpenKarotz = function (karotz_ip) {
 		if (pulse && pulse == true) {
 			pulseOption += "pulse=1&";
 		}
-		$.get(apiLeds + pulseOption + "color=" + color, function(data) {
-			console.log("leds: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiLeds + pulseOption + "color=" + color;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -433,19 +384,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.ears = function (left, right, onSuccess, onFailure) {
-		$.get(apiEars + "?left=" + left + "&right=" + right, function(data) {
-			console.log("ears: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiEars + "?left=" + left + "&right=" + right;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -455,19 +395,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.earsReset = function (onSuccess, onFailure) {
-		$.get(apiEarsReset, function(data) {
-			console.log("ears_reset: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiEarsReset;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -477,19 +406,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
 	this.earsRandom = function (onSuccess, onFailure) {
-		$.get(apiEarsRandom, function(data) {
-			console.log("ears_random: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiEarsRandom;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -504,19 +422,8 @@ var OpenKarotz = function (karotz_ip) {
 		if (id) {
 			idOption += "?id=" + id;
 		}
-		$.get(apiMoods + idOption, function(data) {
-			console.log("moods: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiMoods + idOption;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -542,21 +449,8 @@ var OpenKarotz = function (karotz_ip) {
 		if (nocache && nocache == true) {
 			nocacheOption = "&nocache=1";
 		}
-		var cmd = apiTts + textOption + voiceOption + nocacheOption;
-		console.log("tts: " + cmd);
-		$.get(cmd, function(data) {
-			console.log("tts: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiTts + textOption + voiceOption + nocacheOption;
+		callapi(api, onSuccess, onFailure);
 	};
 
 	/**
@@ -572,22 +466,8 @@ var OpenKarotz = function (karotz_ip) {
 		if (silent && silent == true) {
 			silentOption = '?silent=1';
 		}
-		var cmd = apiSnapshot + silentOption;
-		console.log("snapshot: " + cmd);
-		$.get(cmd, function(data) {
-			console.log("snapshot: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					// Return resulting object
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSnapshot + silentOption;
+		callapi(api, onSuccess, onFailure);
 	}
 
 	/**
@@ -627,22 +507,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @since 0.3.0+
 	 */
 	this.snapshotList = function (onSuccess, onFailure) {
-		var cmd = apiSnapshotList;
-		console.log("snapshot_list: " + cmd);
-		$.get(cmd, function(data) {
-			console.log("snapshot_list: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					// Return resulting object
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiSnapshotList;
+		callapi(api, onSuccess, onFailure);
 	}
 
 	/**
@@ -653,22 +519,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @since 0.3.0+
 	 */
 	this.clearSnapshots = function (onSuccess, onFailure) {
-		var cmd = apiClearSnapshots;
-		console.log("clear_snapshots: " + cmd);
-		$.get(cmd, function(data) {
-			console.log("clear_snapshots: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					// Return resulting object
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiClearSnapshots;
+		callapi(api, onSuccess, onFailure);
 	}
 
 	/**
@@ -679,22 +531,8 @@ var OpenKarotz = function (karotz_ip) {
 	 * @since 0.3.0+
 	 */
 	this.clearCache = function (onSuccess, onFailure) {
-		var cmd = apiClearCache;
-		console.log("clear_cache: " + cmd);
-		$.get(cmd, function(data) {
-			console.log("clear_cache: " + data);
-			var result = JSON.parse(data);
-			if (result.return == 0) {
-				if (onSuccess) {
-					// Return resulting object
-					onSuccess(result);
-				}
-			} else {
-				if (onFailure) {
-					onFailure(result.msg);
-				}
-			}
-		});
+		var api = apiClearCache;
+		callapi(api, onSuccess, onFailure);
 	}
 
 
