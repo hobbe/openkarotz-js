@@ -144,6 +144,12 @@ var OpenKarotz = function (karotz_ip) {
 	var apiSnapshotList = karotz_api + '/snapshot_list';
 	var apiClearSnapshots = karotz_api + '/clear_snapshots';
 	var apiClearCache = karotz_api + '/clear_cache';
+	var apiRfidInfo = karotz_api + '/rfid_info';
+	var apiRfidList = karotz_api + '/rfid_list';
+	var apiRfidListExt = karotz_api + '/rfid_list_ext';
+	var apiRfidDelete = karotz_api + '/rfid_delete';
+	var apiRfidStartRecord = karotz_api + '/rfid_start_record';
+	var apiRfidStopRecord = karotz_api + '/rfid_stop_record';
 
 	var apiMoods = karotz_api + '/apps/moods';
 
@@ -468,7 +474,7 @@ var OpenKarotz = function (karotz_ip) {
 		}
 		var api = apiSnapshot + silentOption;
 		callapi(api, onSuccess, onFailure);
-	}
+	};
 
 	/**
 	 * Get the snapshot url from a given snapshot name. This uses the
@@ -482,7 +488,7 @@ var OpenKarotz = function (karotz_ip) {
 		var url = apiSnapshotGet + '?filename=' + filename;
 		console.log("getSnapshotUrl: " + url);
 		return url;
-	}
+	};
 
 	/**
 	 * Get the snapshot thumbnail url from a given snapshot name. This uses the
@@ -497,7 +503,7 @@ var OpenKarotz = function (karotz_ip) {
 		var url = apiSnapshotGet + '?filename=' + tn;
 		console.log("getSnapshotThumbnailUrl: " + url);
 		return url;
-	}
+	};
 
 	/**
 	 * Snapshot list API: list existing snapshots
@@ -509,7 +515,7 @@ var OpenKarotz = function (karotz_ip) {
 	this.snapshotList = function (onSuccess, onFailure) {
 		var api = apiSnapshotList;
 		callapi(api, onSuccess, onFailure);
-	}
+	};
 
 	/**
 	 * Clear snapshots API: clear existing snapshots
@@ -521,7 +527,7 @@ var OpenKarotz = function (karotz_ip) {
 	this.clearSnapshots = function (onSuccess, onFailure) {
 		var api = apiClearSnapshots;
 		callapi(api, onSuccess, onFailure);
-	}
+	};
 
 	/**
 	 * Clear cache API: clear TTS cache
@@ -533,7 +539,81 @@ var OpenKarotz = function (karotz_ip) {
 	this.clearCache = function (onSuccess, onFailure) {
 		var api = apiClearCache;
 		callapi(api, onSuccess, onFailure);
-	}
+	};
+
+	/**
+	 * RFID Info API: give information on RFID tag
+	 * @function OpenKarotz#rfidInfo
+	 * @param tag - the ID of the RFID tag to get info for
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidInfo = function (tag, onSuccess, onFailure) {
+		var api = apiRfidInfo + "?tag=" + encodeURIComponent(tag);
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * RFID list API: give list of RFID tag
+	 * @function OpenKarotz#rfidList
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidList = function (onSuccess, onFailure) {
+		var api = apiRfidList;
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * RFID list extended API: give extended list of RFID tag
+	 * @function OpenKarotz#rfidListExt
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidListExt = function (onSuccess, onFailure) {
+		var api = apiRfidListExt;
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * RFID Delete API: delete an RFID tag
+	 * @function OpenKarotz#rfidDelete
+	 * @param tag - the ID of the RFID tag to delete
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidDelete = function (tag, onSuccess, onFailure) {
+		var api = apiRfidDelete + "?tag=" + encodeURIComponent(tag);
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * RFID Start Record API: start of RFID tag recording
+	 * @function OpenKarotz#rfidStartRecord
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidStartRecord = function (onSuccess, onFailure) {
+		var api = apiRfidStartRecord;
+		callapi(api, onSuccess, onFailure);
+	};
+
+	/**
+	 * RFID Stop Record API: stop of RFID tag recording
+	 * @function OpenKarotz#rfidStopRecord
+	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
+	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
+	 * @since 0.3.0+
+	 */
+	this.rfidStopRecord = function (onSuccess, onFailure) {
+		var api = apiRfidStopRecord;
+		callapi(api, onSuccess, onFailure);
+	};
 
 
 	// Return object
