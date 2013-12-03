@@ -30,7 +30,7 @@
  * @module openkarotz-js
  * @overview JavaScript library to control {@link http://openkarotz.filippi.org/ OpenKarotz}.
  * This library enables integration with an OpenKarotz device through its APIs.
- * @version 0.3.1
+ * @version 0.3.1+
  * @copyright 2013, Olivier Bagot ({@link http://github.com/hobbe})
  * @license {@link http://github.com/hobbe/openkarotz-js/raw/master/LICENSE MIT License}
  * @author Olivier Bagot ({@link http://github.com/hobbe/openkarotz-js})
@@ -260,12 +260,17 @@ var OpenKarotz = function (karotz_ip) {
 	/**
 	 * Wake up API: wake up Karotz.
 	 * @function OpenKarotz#wakeup
+	 * @param silent - boolean flag for silent wake up; <code>true</code> if no sound should be played, default <code>false</code>
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
-	this.wakeup = function (onSuccess, onFailure) {
+	this.wakeup = function (silent, onSuccess, onFailure) {
+		var silentOption = 'silent=0';
+		if (silent && silent === true) {
+			silentOption = 'silent=1';
+		}
 		var carrot = this;
-		var api = apiWakeup;
+		var api = apiWakeup + '?' + silentOption;
 		callapi(api, function() {
 			carrot.state.sleep = 0;
 			onSuccess();
