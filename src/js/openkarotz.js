@@ -45,10 +45,12 @@
  */
 var OpenKarotz = function (karotz_ip) {
 
+	/*
 	if (karotz_ip === undefined) {
 		console.log("variable karotz_ip is required!");
 		throw new Error("variable karotz_ip is required!");
 	}
+	*/
 
 	/**
 	 * Constant for white color.
@@ -125,7 +127,7 @@ var OpenKarotz = function (karotz_ip) {
 	// OpenKarotz URLs.
 	// These should not change: HTTP on port 80, http://ip:80/cgi-bin
 	//
-	var karotz_url = "http://" + karotz_ip;
+	var karotz_url = karotz_ip ? "http://" + karotz_ip : "";
 	var karotz_api = karotz_url + "/cgi-bin";
 
 	var apiStatus = karotz_api + '/status';
@@ -260,7 +262,7 @@ var OpenKarotz = function (karotz_ip) {
 	/**
 	 * Wake up API: wake up Karotz.
 	 * @function OpenKarotz#wakeup
-	 * @param silent - boolean flag for silent wake up; <code>true</code> if no sound should be played, default <code>false</code>
+	 * @param [silent] - boolean flag for silent wake up; <code>true</code> if no sound should be played, default <code>false</code>, since 0.3.1+
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
@@ -392,11 +394,16 @@ var OpenKarotz = function (karotz_ip) {
 	 * @function OpenKarotz#ears
 	 * @param {number} left - position of left ear
 	 * @param {number} right - position of right ear
+	 * @param {boolean} [noreset] - if <code>true</code>, then ears are not reset before moving, since 0.3.1+
 	 * @param {requestCallback} [onSuccess] - if defined, called on successful API execution with parameter: API resulting object
 	 * @param {requestCallback} [onFailure] - if defined, called on failed API execution with parameter: error message
 	 */
-	this.ears = function (left, right, onSuccess, onFailure) {
-		var api = apiEars + "?left=" + left + "&right=" + right;
+	this.ears = function (left, right, noreset, onSuccess, onFailure) {
+		var noresetOption = '';
+		if (noreset && noreset === true) {
+			noresetOption = '&noreset=1';
+		}
+		var api = apiEars + "?left=" + left + "&right=" + right + noresetOption;
 		callapi(api, onSuccess, onFailure);
 	};
 
